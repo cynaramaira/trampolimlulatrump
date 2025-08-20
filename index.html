@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico: O Escudo de Lula</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores Jamildo */
+        :root {
+            --laranja-jamildo: #f83d03;
+            --azul-jamildo: #024796;
+            --branco: #ffffff;
+            --cinza-claro: #f0f0f0;
+            --cinza-escuro: #333333;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cinza-claro);
+            color: var(--cinza-escuro);
+        }
+
+        .laranja-bg { background-color: var(--laranja-jamildo); }
+        .laranja-text { color: var(--laranja-jamildo); }
+        .azul-bg { background-color: var(--azul-jamildo); }
+        .azul-text { color: var(--azul-jamildo); }
+
+        #stage {
+            min-height: 450px;
+            background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        #trump-arrow {
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+            transform: translateX(-100vw);
+            opacity: 0;
+            z-index: 20;
+        }
+        
+        #trump-arrow.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        #trump-arrow.blocked {
+            transform: translateX(calc(50% - 160px)); /* Posição de colisão */
+        }
+
+        #trump-arrow.retreated {
+            transform: translateX(-100vw);
+            opacity: 0;
+        }
+
+        #lula-container {
+            transition: bottom 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #platform {
+            width: 140px;
+            height: 20px;
+            background-color: var(--azul-jamildo);
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease-in-out;
+        }
+
+        #platform.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #shield {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 15;
+        }
+
+        #shield.active {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+        
+        @keyframes hit-effect {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); filter: brightness(1.5); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        .pillar {
+            transition: all 0.3s ease-in-out;
+        }
+        .pillar:hover {
+            transform: translateY(-10px);
+            filter: brightness(1.1);
+        }
+
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .pillar:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .progress-bar-fill {
+            transition: width 1.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <a href="https://jamildo.com" target="_blank">
+            <img src="https://jamildo.com/media/uploads/logojamildo.png" 
+                 alt="Logo Jamildo" 
+                 class="h-10 md:h-12"
+                 onerror="this.onerror=null;this.src='https://placehold.co/200x50/024796/ffffff?text=Jamildo';">
+        </a>
+        <div class="text-right">
+            <h1 class="text-xl md:text-3xl font-black azul-text">O ESCUDO DE LULA</h1>
+            <p class="text-sm md:text-base text-gray-600">Como a Crise com Trump Virou um Trampolim Político</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        
+        <!-- Contexto -->
+        <section class="text-center mb-8">
+            <p class="max-w-3xl mx-auto text-base md:text-lg">A resposta firme ao tarifaço americano impulsionou a aprovação do presidente, especialmente no Nordeste e entre os mais pobres, revertendo meses de queda.</p>
+        </section>
+
+        <!-- Palco Principal -->
+        <section id="stage-container" class="bg-white rounded-lg shadow-xl p-4 md:p-8 mb-8">
+            <div id="stage" class="relative w-full overflow-hidden rounded-md">
+                <!-- Seta de Trump -->
+                <div id="trump-arrow" class="absolute top-1/2 -translate-y-1/2 left-0 flex items-center w-1/3 md:w-1/4">
+                    <div class="w-full h-8 md:h-12 laranja-bg flex items-center justify-center text-white font-black text-sm md:text-xl">TARIFAÇO</div>
+                    <div class="w-0 h-0 border-t-[32px] md:border-t-[48px] border-t-transparent border-b-[32px] md:border-b-[48px] border-b-transparent border-l-[32px] md:border-l-[48px] border-l-[var(--laranja-jamildo)]"></div>
+                     <img src="https://jamildo.com/media/uploads/2025/04/trump-tem-grande-rejeicao-no-brasil.jpg" alt="Foto de Donald Trump" class="h-16 w-16 md:h-24 md:w-24 rounded-full object-cover border-4 border-white shadow-lg -ml-8" onerror="this.onerror=null;this.src='https://placehold.co/100/f83d03/ffffff?text=Trump';">
+                </div>
+
+                <!-- Personagem Lula -->
+                <div id="lula-container">
+                    <img src="https://jamildo.com/media/uploads/2025/05/presidente-lula.jpg" alt="Foto de Lula" class="h-20 w-20 md:h-28 md:w-28 rounded-full object-cover border-4 border-white shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/120/024796/ffffff?text=Lula';">
+                    <div id="lula-approval-tag" class="relative -top-4 text-center text-sm font-bold azul-bg text-white rounded-full px-2 py-1 shadow-md transition-colors duration-500">
+                        Aprovação: <span id="approval-value">40</span>% (Maio)
+                    </div>
+                    <div id="platform"></div>
+                </div>
+
+                <!-- Escudo -->
+                <div id="shield" class="w-32 h-32 md:w-40 md:h-40">
+                    <svg viewBox="0 0 100 100" class="drop-shadow-lg">
+                        <path d="M50 0 L95 20 L95 60 C95 80 75 100 50 100 C25 100 5 80 5 60 L5 20 Z" fill="#024796"/>
+                        <text x="50" y="55" font-size="10" fill="white" text-anchor="middle" font-weight="bold">DEFESA DA</text>
+                        <text x="50" y="70" font-size="10" fill="white" text-anchor="middle" font-weight="bold">SOBERANIA</text>
+                    </svg>
+                </div>
+            </div>
+            <p id="stage-message" class="text-center mt-4 font-bold text-lg azul-text h-8 transition-opacity duration-500"></p>
+        </section>
+
+        <!-- Consequências (Pilares) -->
+        <section id="consequences">
+            <h2 class="text-2xl md:text-3xl font-black text-center mb-6 azul-text">O Trampolim Político: Onde a Aprovação Cresceu</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <!-- Pilar Nordeste -->
+                <div class="pillar relative bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer">
+                    <div class="laranja-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Nordeste</h3>
+                    <p class="text-3xl font-black laranja-text">60%</p>
+                    <p class="text-gray-500">Aprovação</p>
+                    <div class="tooltip absolute bottom-full mb-2 w-max px-3 py-1.5 bg-gray-800 text-white text-sm rounded-md shadow-lg">
+                        Salto de 53% (Julho) para 60% (Agosto)
+                    </div>
+                </div>
+                <!-- Pilar Mais Pobres -->
+                <div class="pillar relative bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer">
+                    <div class="azul-bg w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Mais Pobres (até 2 SM)</h3>
+                    <p class="text-3xl font-black azul-text">55%</p>
+                    <p class="text-gray-500">Aprovação</p>
+                     <div class="tooltip absolute bottom-full mb-2 w-max px-3 py-1.5 bg-gray-800 text-white text-sm rounded-md shadow-lg">
+                        Recuperação crucial na base histórica de apoio.
+                    </div>
+                </div>
+                <!-- Pilar Aprovação Geral -->
+                <div class="pillar relative bg-white rounded-lg shadow-lg p-6 text-center cursor-pointer">
+                    <div class="bg-gray-600 w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Aprovação Geral</h3>
+                    <p class="text-3xl font-black text-gray-700">46%</p>
+                    <p class="text-gray-500">Aprovação</p>
+                     <div class="tooltip absolute bottom-full mb-2 w-max px-3 py-1.5 bg-gray-800 text-white text-sm rounded-md shadow-lg">
+                        Melhor resultado desde janeiro, revertendo tendência de queda.
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Antes e Depois -->
+        <section id="before-after" class="mt-12">
+            <h2 class="text-2xl md:text-3xl font-black text-center mb-8 azul-text">O Impacto da Mudança: Antes e Depois</h2>
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-xl p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Antes -->
+                    <div>
+                        <h3 class="text-xl font-bold text-center mb-4">Maio/25: Ponto Baixo</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-base font-medium azul-text">Aprovação</span>
+                                    <span class="text-sm font-medium azul-text">40%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="approval-before" class="azul-bg h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-base font-medium laranja-text">Desaprovação</span>
+                                    <span class="text-sm font-medium laranja-text">57%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="disapproval-before" class="laranja-bg h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Depois -->
+                    <div>
+                        <h3 class="text-xl font-bold text-center mb-4">Agosto/25: Recuperação</h3>
+                         <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-base font-medium azul-text">Aprovação</span>
+                                    <span class="text-sm font-medium azul-text">46%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="approval-after" class="azul-bg h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-base font-medium laranja-text">Desaprovação</span>
+                                    <span class="text-sm font-medium laranja-text">51%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-4">
+                                    <div id="disapproval-after" class="laranja-bg h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = {
+                trumpArrow: document.getElementById('trump-arrow'),
+                lulaContainer: document.getElementById('lula-container'),
+                lulaApprovalTag: document.getElementById('lula-approval-tag'),
+                shield: document.getElementById('shield'),
+                platform: document.getElementById('platform'),
+                stageMessage: document.getElementById('stage-message'),
+                approvalBefore: document.getElementById('approval-before'),
+                disapprovalBefore: document.getElementById('disapproval-before'),
+                approvalAfter: document.getElementById('approval-after'),
+                disapprovalAfter: document.getElementById('disapproval-after'),
+            };
+
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.innerHTML = Math.floor(progress * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            function resetAnimation() {
+                elements.stageMessage.style.opacity = 0;
+                elements.trumpArrow.classList.remove('active', 'blocked', 'retreated');
+                elements.shield.classList.remove('active');
+                elements.shield.style.animation = '';
+                elements.platform.classList.remove('active');
+                
+                elements.lulaContainer.style.transition = 'none';
+                elements.lulaContainer.style.bottom = '5%';
+                
+                elements.lulaApprovalTag.classList.remove('laranja-bg');
+                elements.lulaApprovalTag.classList.add('azul-bg');
+                elements.lulaApprovalTag.innerHTML = `Aprovação: <span id="approval-value">40</span>% (Maio)`;
+            }
+
+            function runAnimationLoop() {
+                resetAnimation();
+
+                setTimeout(() => {
+                    elements.lulaContainer.style.transition = 'bottom 1.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                    
+                    setTimeout(() => {
+                        elements.stageMessage.textContent = 'Trump anuncia tarifaço contra o Brasil...';
+                        elements.stageMessage.style.opacity = 1;
+                        elements.trumpArrow.classList.add('active');
+                    }, 500);
+
+                    setTimeout(() => {
+                        elements.stageMessage.textContent = 'Lula reage em defesa da soberania nacional.';
+                        elements.shield.classList.add('active');
+                        elements.trumpArrow.classList.add('blocked');
+                    }, 2000);
+
+                    setTimeout(() => {
+                        elements.stageMessage.innerHTML = 'A resposta firme foi bem recebida...';
+                        elements.shield.style.animation = 'hit-effect 0.5s ease-in-out';
+                        elements.trumpArrow.classList.add('retreated');
+                    }, 3500);
+                    
+                    setTimeout(() => {
+                        elements.shield.classList.remove('active');
+                        elements.platform.classList.add('active');
+                        elements.stageMessage.textContent = '...e a crise vira uma plataforma de ascensão!';
+                    }, 4300);
+
+                    setTimeout(() => {
+                        elements.lulaContainer.style.bottom = '45%';
+                        animateValue(document.getElementById('approval-value'), 40, 46, 1500);
+                    }, 5000);
+
+                    setTimeout(() => {
+                        elements.lulaApprovalTag.classList.remove('azul-bg');
+                        elements.lulaApprovalTag.classList.add('laranja-bg');
+                        elements.lulaApprovalTag.innerHTML = `Aprovação: <span id="approval-value">46</span>% (Agosto)`;
+                        elements.stageMessage.textContent = 'Aprovação recuperada em segmentos-chave!';
+                    }, 6500);
+                    
+                    setTimeout(() => {
+                        elements.stageMessage.textContent = 'Reiniciando...';
+                        elements.stageMessage.style.opacity = 1;
+                    }, 9500);
+
+                    setTimeout(runAnimationLoop, 10500);
+
+                }, 100);
+            }
+            
+            // Anima as barras de progresso uma vez no carregamento
+            setTimeout(() => {
+                elements.approvalBefore.style.width = '40%';
+                elements.disapprovalBefore.style.width = '57%';
+                elements.approvalAfter.style.width = '46%';
+                elements.disapprovalAfter.style.width = '51%';
+            }, 500);
+
+            // Inicia o loop da animação principal
+            runAnimationLoop();
+        });
+    </script>
+</body>
+</html>
